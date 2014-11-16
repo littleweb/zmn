@@ -184,7 +184,7 @@
 					me = $(this);
 				if(sendKey != "yes"){
 					AV.Cloud.requestSmsCode({
-						mobilePhoneNumber: '13436429178',
+						mobilePhoneNumber: $("[name='mobile']").val(),
 						name: '啄木鸟教育',
 						op: '注册认证',
 						ttl: 10
