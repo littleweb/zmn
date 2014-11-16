@@ -179,6 +179,12 @@
 					$(".field-code").css("display", "-webkit-box");
 				}
 			});
+			$(document).delegate("[type='number']", "focus", function(){
+				if($.os.ios){
+					$(this).attr("pattern", "[0-9]*");
+				}
+				//$(this).attr("type", "tel");
+			});
 			$("#sms").click(function(){
 				var sendKey = $(this).attr("send"),
 					me = $(this);
