@@ -1,0 +1,1 @@
+Cloud code project for 生活计划. Cloud Code Guide: https://cn.avoscloud.com/docs/cloud_code_guide.html
