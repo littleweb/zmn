@@ -56,6 +56,7 @@
 				"other": "正在工作"
 			};
 			var query = new AV.Query(AV.data.zmn);
+			query.descending("createdAt");
 			query.find({
 					success: function(results) {
 					$scope.data = JSON.parse(JSON.stringify(results));
