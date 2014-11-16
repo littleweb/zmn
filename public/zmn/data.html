@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	<meta charset="utf-8">
+	<title>啄木鸟</title>
+	<link href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="app/ui/base.css" rel="stylesheet">
+	<script src="https://leancloud.cn/scripts/lib/av-0.4.5.min.js"></script>
+	<script src="assets/angular.min.js"></script>
+</head>
+<body ng-app="zmn" ng-controller="dataList">
+	<nav class="navbar navbar-default" role="navigation" style="background:#eee;">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">啄木鸟教育</a>
+			</div>
+		</div>
+	</nav>
+	<div class="mind-list" style="padding: 0 15px;">
+		<table class="table table-bordered">
+			<tr>
+				<th>姓名</th>
+				<th>手机号</th>
+				<th>年级</th>
+				<th>申请时间</th>
+			</tr>
+			<tr ng-repeat="item in data">
+				<td>{{item.user_name}}</td>
+				<td>{{item.mobile}}</td>
+				<td>{{grade[item.grade]}}</td>
+				<td>{{item.createdAt|date:"yyyy-MM-dd hh:mm:ss"}}</td>
+			</tr>
+		</table>
+	</div>
+	<script src="assets/jquery.min.js"></script>
+	<script type="text/javascript">
+		//初始化AV
+		AV.initialize("3q9ii83g4jredq4mo9iyfsueznxs15vqjh0fs8tp8mwz8sdp", "7zqt9wyxser1jgj0nypwmwfe8aalv37e58anwkkg5ch6nl53");
+		AV.data = {
+			zmn: AV.Object.extend("zmn")
+		};
+		//初始化angular
+		var app = angular.module('zmn', []);
+		app.controller('dataList', function($scope) {
+			$scope.grade = {
+				"11": "初一",
+				"12": "初二",
+				"13": "初三",
+				"21": "高一",
+				"22": "高二",
+				"23": "高三",
+				"31": "大一",
+				"32": "大二",
+				"33": "大三",
+				"34": "大四",
+				"other": "正在工作"
+			};
+			var query = new AV.Query(AV.data.zmn);
+			query.find({
+					success: function(results) {
+					$scope.data = JSON.parse(JSON.stringify(results));
+					console.log($scope.data);
+					$scope.$apply();
+				},
+				error: function(error) {
+					alert("Error: " + error.code + " " + error.message);
+				}
+			});
+		});
+	</script>
+</body>
+</html>
