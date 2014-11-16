@@ -99,6 +99,9 @@
 			position: absolute;right: 0;top: 0;z-index: 1;
 			background-color: #f1f4f9;border-left: 1px solid #e2e8f8;
 		}
+		.reg-wrap .field-code{
+			display: none;
+		}
 	</style>
 </head>
 <body>
@@ -136,7 +139,7 @@
 			<label>手机</label>
 			<div class="content"><input name="mobile" type="text" placeholder="手机"></div>
 		</div>
-		<div class="field">
+		<div class="field field-code">
 			<label>短信验证码</label>
 			<div class="content"><input name="code" type="text" placeholder="短信验证码"></div>
 			<button id="sms" class="btn-yellow btn-sms">点击获取</button>
@@ -169,6 +172,13 @@
 			AV.data = {
 				zmn: AV.Object.extend("zmn")
 			};
+			$("[name='mobile']").on("input", function(){
+				var mobile = $(this).val();
+				console.log(mobile.length);
+				if(mobile.length == 11){
+					$(".field-code").css("display", "-webkit-box");
+				}
+			});
 			$("#sms").click(function(){
 				var sendKey = $(this).attr("send"),
 					me = $(this);
