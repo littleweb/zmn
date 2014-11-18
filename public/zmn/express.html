@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	<meta charset="utf-8">
+	<title>啄木鸟美国留学</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<script src="https://leancloud.cn/scripts/lib/av-0.4.5.min.js"></script>
+	<script src="assets/zepto.min.js"></script>
+	<style type="text/css">
+		*{
+			margin: 0;padding: 0;
+		}
+		body{
+			background: #ffe314;
+		}
+		img{
+			vertical-align: bottom;
+		}
+		.reg-wrap{
+			padding: 20px 10px;
+			background: #fee100;
+		}
+		.reg-wrap .title{
+			padding-bottom: 15px;
+			font-size: 20px;color: #434371;
+			font-weight: bold;
+			color: #45446c;text-align: center;
+		}
+		.reg-wrap .field{
+			height: 40px;margin-bottom: 10px;
+			display: -webkit-box;
+			line-height: 40px;
+			font-size: 16px;
+		}
+		.reg-wrap .field label{
+			width: 90px;padding-right: 10px;
+			display: inline-block;
+			text-align: right;
+			color: #636466;
+			background-color: #f1f4f9;
+			border: 1px solid #cee3f8;
+			border-right: 1px solid #e2e8f8;
+		}
+		.reg-wrap .field .content{
+			height: 40px;
+			-webkit-box-flex: 1;
+			background: #fff;
+			border: 1px solid #cee3f8;
+			color: #555;
+			border-left: none;
+		}
+		.reg-wrap .field .content input{
+			width: 100%;height: 40px;
+			text-indent: 10px;
+			border: none;font-size: 100%;
+			vertical-align: top;
+		}
+		.reg-wrap .field .content input::-webkit-input-placeholder{
+			font-size: 16px;color: #d3d3d3;
+		}
+		.sucess{
+			display: none;
+		}
+		.btn-yellow{
+			width: 100%;height: 40px;
+			line-height: 40px;
+			display: block;
+			text-align: center;font-size: 16px;
+			color: #fff;
+			border: none;
+			background-color: #f67800;
+			border: 1px solid #f67800;
+		}
+		.btn-sms{
+			width: 75px;margin-left: 10px;
+		}
+		.ui-select{
+			position: relative;z-index: 10;
+		}
+		.ui-select select{
+			width: 100%;
+			height: 100%;
+			-webkit-appearance: none;
+			font-size: 16px;
+			position: absolute;
+			left: 0;
+			top: 0;z-index: 2;
+			opacity: 0;
+		}
+		.ui-select .text{
+			padding-left: 10px;
+			color: #555;
+		}
+		.ui-select:after{
+			width: 36px;height: 40px;
+			display: inline-block;
+			content: "▼";
+			text-align: center;color: #ced2d5;
+			position: absolute;right: 0;top: 0;z-index: 1;
+			background-color: #f1f4f9;border-left: 1px solid #e2e8f8;
+		}
+		.reg-wrap .field-code{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="banner"><img src="assets/banner.png" width="100%"></div>
+	<div class="reg-wrap">
+		<div class="title">在线申请</div>
+		<div class="field">
+			<label>所在年级</label>
+			<div class="content">
+				<div class="ui-select">
+					<span class="text">请选择所在年级</span>
+					<input name="grade" type="hidden">
+					<select>
+						<option value="0">请选择所在年级</option>
+						<option value="11">初一</option>
+						<option value="12">初二</option>
+						<option value="13">初三</option>
+						<option value="21">高一</option>
+						<option value="22">高二</option>
+						<option value="23">高三</option>
+						<option value="31">大一</option>
+						<option value="32">大二</option>
+						<option value="33">大三</option>
+						<option value="34">大四</option>
+						<option value="other">正在工作</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label>姓名</label>
+			<div class="content"><input name="user_name" type="text" placeholder="姓名"></div>
+		</div>
+		<div class="field">
+			<label>手机</label>
+			<div class="content"><input name="mobile" type="number" placeholder="手机"></div>
+		</div>
+		<div class="field field-code">
+			<label>短信验证码</label>
+			<div class="content"><input name="code" type="text" placeholder="短信验证码"></div>
+			<button id="sms" class="btn-yellow btn-sms">点击获取</button>
+		</div>
+		<br>
+		<div class="field">
+			<button id="submit" class="btn-yellow">提交申请</button>
+		</div>
+	</div>
+	<div class="sucess">
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<img width="100%" src="assets/sucess.png">
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+	<div class="foot"><img src="assets/foot.png" width="100%"></div>
+	<script type="text/javascript">
+		$(function(){
+			//初始化AV
+			AV.initialize("3q9ii83g4jredq4mo9iyfsueznxs15vqjh0fs8tp8mwz8sdp", "7zqt9wyxser1jgj0nypwmwfe8aalv37e58anwkkg5ch6nl53");
+			AV.data = {
+				zmn: AV.Object.extend("zmn")
+			};
+			$("[name='mobile']").on("input", function(){
+				var mobile = $(this).val();
+				console.log(mobile.length);
+				if(mobile.length == 11){
+					$(".field-code").css("display", "-webkit-box");
+				}
+			});
+			$(document).delegate("[type='number']", "focus", function(){
+				if($.os.ios){
+					$(this).attr("pattern", "[0-9]*");
+				}
+				//$(this).attr("type", "tel");
+			});
+			$("#sms").click(function(){
+				var sendKey = $(this).attr("send"),
+					me = $(this);
+				if(sendKey != "yes"){
+					AV.Cloud.requestSmsCode({
+						mobilePhoneNumber: $("[name='mobile']").val(),
+						name: '啄木鸟教育',
+						op: '注册认证',
+						ttl: 10
+					}).then(function(){
+						me.text("发送成功");
+						me.attr("send", "yes");
+						//发送成功
+					}, function(err){
+						//发送失败
+					});	
+				}		
+			});
+			$("#submit").click(function(){
+				var user_name = $("[name='user_name']"),
+					mobile = $("[name='mobile']"),
+					grade = $("[name='grade']"),
+					code = $("[name='code']");
+				if(!user_name.val()){
+					alert("请输入姓名");
+					return false;
+				}
+				if(!grade.val()){
+					alert("请选择你的年级");
+					return false;
+				}
+				if(!mobile.val()){
+					alert("请输入手机号码");
+					return false;
+				}
+				if(!code.val()){
+					alert("请输入短信验证码");
+					return false;
+				}
+				AV.Cloud.verifySmsCode($("[name='code']").val()).then(function(){
+					var zmn = new AV.data.zmn();
+					zmn.save({
+						user_name: $("[name='user_name']").val(),
+						mobile: $("[name='mobile']").val(),
+						grade: $("[name='grade']").val()
+					}, {
+						success: function(gameScore) {
+							alert("申请成功");
+							$(".reg-wrap").hide();
+							$(".sucess").show();
+						},
+						error: function(gameScore, error) {
+						// The save failed.
+						// error is a AV.Error with an error code and description.
+						}
+					});
+					//验证成功
+				}, function(err){
+					//验证失败
+					alert("短信验证码输入错误，请重新输入");
+				});
+			});
+			//ui-select
+			$(document).delegate(".ui-select select", "change", function(){
+				var input = $(this).parents(".ui-select").find("input"),
+					sel = $(this).find("option").not(function(){return!this.selected});
+					value = sel.attr("value"),
+					text = $(this).parents(".ui-select").find(".text");
+				input.val(sel.val());
+				text.html(sel.text());
+			});
+		});
+	</script>
+	<script type="text/javascript">
+	var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+	document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F839a429b0f495e352dc2f6b4ecd01017' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+</body>
+</html>
