@@ -139,11 +139,6 @@
 			<label>手机</label>
 			<div class="content"><input name="mobile" type="number" placeholder="手机"></div>
 		</div>
-		<div class="field field-code">
-			<label>短信验证码</label>
-			<div class="content"><input name="code" type="text" placeholder="短信验证码"></div>
-			<button id="sms" class="btn-yellow btn-sms">点击获取</button>
-		</div>
 		<br>
 		<div class="field">
 			<button id="submit" class="btn-yellow">提交申请</button>
@@ -172,42 +167,15 @@
 			AV.data = {
 				zmn: AV.Object.extend("zmn")
 			};
-			$("[name='mobile']").on("input", function(){
-				var mobile = $(this).val();
-				console.log(mobile.length);
-				if(mobile.length == 11){
-					$(".field-code").css("display", "-webkit-box");
-				}
-			});
 			$(document).delegate("[type='number']", "focus", function(){
 				if($.os.ios){
 					$(this).attr("pattern", "[0-9]*");
 				}
-				//$(this).attr("type", "tel");
-			});
-			$("#sms").click(function(){
-				var sendKey = $(this).attr("send"),
-					me = $(this);
-				if(sendKey != "yes"){
-					AV.Cloud.requestSmsCode({
-						mobilePhoneNumber: $("[name='mobile']").val(),
-						name: '啄木鸟教育',
-						op: '注册认证',
-						ttl: 10
-					}).then(function(){
-						me.text("发送成功");
-						me.attr("send", "yes");
-						//发送成功
-					}, function(err){
-						//发送失败
-					});	
-				}		
 			});
 			$("#submit").click(function(){
 				var user_name = $("[name='user_name']"),
 					mobile = $("[name='mobile']"),
-					grade = $("[name='grade']"),
-					code = $("[name='code']");
+					grade = $("[name='grade']");
 				if(!user_name.val()){
 					alert("请输入姓名");
 					return false;
@@ -220,31 +188,21 @@
 					alert("请输入手机号码");
 					return false;
 				}
-				if(!code.val()){
-					alert("请输入短信验证码");
-					return false;
-				}
-				AV.Cloud.verifySmsCode($("[name='code']").val()).then(function(){
-					var zmn = new AV.data.zmn();
-					zmn.save({
-						user_name: $("[name='user_name']").val(),
-						mobile: $("[name='mobile']").val(),
-						grade: $("[name='grade']").val()
-					}, {
-						success: function(gameScore) {
-							alert("申请成功");
-							$(".reg-wrap").hide();
-							$(".sucess").show();
-						},
-						error: function(gameScore, error) {
-						// The save failed.
-						// error is a AV.Error with an error code and description.
-						}
-					});
-					//验证成功
-				}, function(err){
-					//验证失败
-					alert("短信验证码输入错误，请重新输入");
+				var zmn = new AV.data.zmn();
+				zmn.save({
+					user_name: $("[name='user_name']").val(),
+					mobile: $("[name='mobile']").val(),
+					grade: $("[name='grade']").val()
+				}, {
+					success: function(gameScore) {
+						alert("申请成功");
+						$(".reg-wrap").hide();
+						$(".sucess").show();
+					},
+					error: function(gameScore, error) {
+					// The save failed.
+					// error is a AV.Error with an error code and description.
+					}
 				});
 			});
 			//ui-select
