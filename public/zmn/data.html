@@ -23,12 +23,14 @@
 				<th>手机号</th>
 				<th>年级</th>
 				<th>申请时间</th>
+				<th>类型</th>
 			</tr>
 			<tr ng-repeat="item in data">
 				<td>{{item.user_name}}</td>
 				<td>{{item.mobile}}</td>
 				<td>{{grade[item.grade]}}</td>
 				<td>{{item.createdAt|date:"yyyy-MM-dd hh:mm:ss"}}</td>
+				<td>{{type[item.type]}}</td>
 			</tr>
 		</table>
 	</div>
@@ -55,6 +57,7 @@
 				"34": "大四",
 				"other": "正在工作"
 			};
+			$scope.type = ["未认证", "已认证"];
 			var query = new AV.Query(AV.data.zmn);
 			query.descending("createdAt");
 			query.find({
