@@ -102,6 +102,15 @@
 		.reg-wrap .field-code{
 			display: none;
 		}
+		.about{
+			padding: 30px 15px;
+			font-size: 14px;
+			color: #fff;line-height: 24px;
+			background: #00acd0;
+		}
+		.yellow{
+			color: #ffe100;font-weight: bold;
+		}
 	</style>
 </head>
 <body>
@@ -164,6 +173,15 @@
 		<br>
 		<br>
 	</div>
+	<div class="foot"><img src="assets/fuli.png" width="100%"></div>
+	<div class="about">
+		<p><img width="67" src="assets/logotext.png">国际教育是由中国资深海外升学专家陈起永老师创立，旗下拥有啄木鸟教育，满分培训，满分网等子品牌，现已发展成为国内顶尖的教育咨询机构之一。在中国首家提出留学规划的理念。啄木鸟教育成立至今，专注于美国名校申请，旨在为中国留学生提供整套优质的留学咨询、培训服务、活动规划、实习研究，已发展为国内最专业的美国高端留学品牌引领者。</p>
+		<br>
+		<br>
+		<p>目前已有多名学生达到托福、SAT满分成绩，数百名学生达到托福110+，SAT2200+，GRE320+，GMAT700+</p>
+		<p><span class="yellow">100%</span>录取美国大学前80</p>
+		<p><span class="yellow">100%80%</span>录取美国大学前50</p>
+	</div>
 	<div class="foot"><img src="assets/foot.png" width="100%"></div>
 	<script type="text/javascript">
 		$(function(){
@@ -172,11 +190,55 @@
 			AV.data = {
 				zmn: AV.Object.extend("zmn")
 			};
+			function saveData(key){
+				var query = new AV.Query(AV.data.zmn);
+				query.equalTo("mobile", $("[name='mobile']").val());
+				query.find({
+					success: function(results) {
+						var data = (JSON.parse(JSON.stringify(results)));
+						var type = key == "code">0?1:0;
+						if(data.length > 0){
+							var ob = {
+								objectId: data[0].objectId,
+								user_name: $("[name='user_name']").val(),
+								mobile: $("[name='mobile']").val(),
+								grade: $("[name='grade']").val(),
+								type: type								
+							}
+						}else{
+							var ob = {
+								user_name: $("[name='user_name']").val(),
+								mobile: $("[name='mobile']").val(),
+								grade: $("[name='grade']").val(),
+								type: type								
+							}							
+						}
+						var zmn = new AV.data.zmn();
+						zmn.save(ob, {
+							success: function(gameScore) {
+								if(key == "code"){
+									alert("申请成功");
+									$(".reg-wrap").hide();
+									$(".sucess").show();
+								}
+							},
+							error: function(gameScore, error) {
+							// The save failed.
+							// error is a AV.Error with an error code and description.
+							}
+						});
+					},
+					error: function(error) {
+						alert("Error: " + error.code + " " + error.message);
+					}
+				});
+			}
 			$("[name='mobile']").on("input", function(){
 				var mobile = $(this).val();
 				console.log(mobile.length);
 				if(mobile.length == 11){
 					$(".field-code").css("display", "-webkit-box");
+					saveData();
 				}
 			});
 			$(document).delegate("[type='number']", "focus", function(){
@@ -225,22 +287,7 @@
 					return false;
 				}
 				AV.Cloud.verifySmsCode($("[name='code']").val()).then(function(){
-					var zmn = new AV.data.zmn();
-					zmn.save({
-						user_name: $("[name='user_name']").val(),
-						mobile: $("[name='mobile']").val(),
-						grade: $("[name='grade']").val()
-					}, {
-						success: function(gameScore) {
-							alert("申请成功");
-							$(".reg-wrap").hide();
-							$(".sucess").show();
-						},
-						error: function(gameScore, error) {
-						// The save failed.
-						// error is a AV.Error with an error code and description.
-						}
-					});
+					saveData("code");
 					//验证成功
 				}, function(err){
 					//验证失败
