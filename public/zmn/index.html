@@ -196,7 +196,7 @@
 				query.find({
 					success: function(results) {
 						var data = (JSON.parse(JSON.stringify(results)));
-						var type = key == "code">0?1:0;
+						var type = key?1:0;
 						if(data.length > 0){
 							var ob = {
 								objectId: data[0].objectId,

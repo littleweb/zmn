@@ -19,6 +19,7 @@
 	<div class="mind-list" style="padding: 0 15px;">
 		<table class="table table-bordered">
 			<tr>
+				<th>编号</th>
 				<th>姓名</th>
 				<th>手机号</th>
 				<th>年级</th>
@@ -26,6 +27,7 @@
 				<th>类型</th>
 			</tr>
 			<tr ng-repeat="item in data">
+				<td>{{item.id}}</td>
 				<td>{{item.user_name}}</td>
 				<td>{{item.mobile}}</td>
 				<td>{{grade[item.grade]}}</td>
